@@ -1,0 +1,27 @@
+[
+  {
+    "source": "mock_news_feed",
+    "title": "Acme Data Systems announces Midwest expansion",
+    "url": "https://example.com/acme-expansion",
+    "detected_at": "2026-03-15T12:00:00Z",
+    "signal_type": "expansion",
+    "summary": "Acme Data Systems is opening a new Detroit office and hiring enterprise sales staff.",
+    "metadata": {
+      "organization_name": "Acme Data Systems",
+      "region": "Midwest"
+    }
+  },
+  {
+    "source": "mock_funding_feed",
+    "title": "BrightForge secures Series B funding",
+    "url": "https://example.com/brightforge-series-b",
+    "detected_at": "2026-03-15T13:00:00Z",
+    "signal_type": "funding",
+    "summary": "BrightForge raised $55M to accelerate go-to-market expansion.",
+    "metadata": {
+      "organization_name": "BrightForge",
+      "round": "Series B",
+      "amount_usd": 55000000
+    }
+  }
+]
