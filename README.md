@@ -1,2 +1,2 @@
 # dealflow-ai-engine
-Built dealflow-ai-engine, an AI-driven deal intelligence and CRM lifecycle automation platform that detects external signals, resolves counterparties, ranks opportunities, generates evidence-backed strategies, and orchestrates follow-up tasks. Designed the system with a canonical Postgres data model, modular Python services, SQL marts, structured LLM outputs, and a feedback loop for continuous improvement across scoring and strategy quality.
+AI-driven deal intelligence and CRM lifecycle automation platform
