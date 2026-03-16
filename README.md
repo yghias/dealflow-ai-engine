@@ -23,6 +23,9 @@
 - [RUNBOOK.md](RUNBOOK.md)
 - [sql/schema.sql](sql/schema.sql)
 - [sql/marts.sql](sql/marts.sql)
+- [sql/intermediate.sql](sql/intermediate.sql)
+- [sql/reconciliation.sql](sql/reconciliation.sql)
+- [sql/metrics.sql](sql/metrics.sql)
 - [sql/tests.sql](sql/tests.sql)
 
 ## Runtime Assumptions

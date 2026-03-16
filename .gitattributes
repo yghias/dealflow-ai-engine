@@ -2,3 +2,5 @@
 *.ipynb linguist-vendored
 docs/*.png linguist-generated
 sample_data/** linguist-generated
+airflow/**/*.py linguist-detectable=false
+tests/**/*.py linguist-vendored
