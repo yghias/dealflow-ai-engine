@@ -1,0 +1,4 @@
+*.sql linguist-language=SQL
+*.ipynb linguist-vendored
+docs/*.png linguist-generated
+sample_data/** linguist-generated

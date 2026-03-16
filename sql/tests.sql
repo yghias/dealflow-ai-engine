@@ -65,3 +65,32 @@ select
 from mart.companies
 group by 1
 having count(distinct company_id) > 1;
+
+select *
+from mart.deal_pipeline_mart
+where overall_priority_score is null;
+
+select *
+from mart.investor_matching_mart
+where investor_rank <= 0;
+
+select *
+from mart.crm_lifecycle_mart
+where active_lifecycle_days < 0;
+
+select *
+from mart.deal_velocity_mart
+where avg_pipeline_days < 0;
+
+select *
+from mart.investor_relationship_graph_mart
+where shared_company_count <= 0;
+
+select *
+from mart.signal_quality_mart
+where distinct_signals > landed_signals;
+
+select *
+from mart.semantic_metrics_mart
+where outreach_response_rate < 0
+   or outreach_response_rate > 1;
