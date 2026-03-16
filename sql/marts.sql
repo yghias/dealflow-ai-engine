@@ -237,3 +237,129 @@ select
 from pipeline_rollup p
 cross join engagement_rollup e
 cross join outcome_rollup o;
+
+create or replace view mart.source_performance_mart as
+with signal_quality as (
+    select
+        source_system,
+        event_type,
+        count(*) as landed_signals,
+        count(distinct source_record_id) as distinct_signals,
+        sum(case when payload:company_name::string is null then 1 else 0 end) as missing_company_name_count,
+        sum(case when payload:website::string is null then 1 else 0 end) as missing_website_count
+    from raw.deal_signals_raw
+    group by 1,2
+),
+deal_attribution as (
+    select
+        ds.source_system,
+        ds.event_type,
+        count(distinct d.deal_id) as attributed_deals,
+        avg(sr.overall_priority_score) as avg_priority_score
+    from raw.deal_signals_raw ds
+    left join mart.companies c
+        on lower(regexp_replace(ds.payload:company_name::string, '[^a-zA-Z0-9]', '')) = c.normalized_name
+    left join mart.deals d
+        on d.company_id = c.company_id
+    left join mart.scoring_results sr
+        on sr.deal_id = d.deal_id
+    group by 1,2
+)
+select
+    q.source_system,
+    q.event_type,
+    q.landed_signals,
+    q.distinct_signals,
+    q.missing_company_name_count,
+    q.missing_website_count,
+    coalesce(a.attributed_deals, 0) as attributed_deals,
+    coalesce(a.avg_priority_score, 0) as avg_priority_score
+from signal_quality q
+left join deal_attribution a
+    on a.source_system = q.source_system
+   and a.event_type = q.event_type;
+
+create or replace view mart.owner_capacity_mart as
+with pipeline_rollup as (
+    select
+        owner_name,
+        count(distinct deal_id) as open_deals,
+        avg(overall_priority_score) as avg_priority_score
+    from mart.deal_pipeline_mart
+    group by 1
+),
+activity_rollup as (
+    select
+        owner_name,
+        count(*) as crm_activities_30d,
+        sum(case when activity_type = 'meeting_booked' then 1 else 0 end) as meetings_booked_30d,
+        max(activity_timestamp) as latest_activity_timestamp
+    from mart.crm_activities
+    where activity_timestamp >= dateadd('day', -30, current_timestamp())
+    group by 1
+)
+select
+    p.owner_name,
+    p.open_deals,
+    p.avg_priority_score,
+    coalesce(a.crm_activities_30d, 0) as crm_activities_30d,
+    coalesce(a.meetings_booked_30d, 0) as meetings_booked_30d,
+    a.latest_activity_timestamp
+from pipeline_rollup p
+left join activity_rollup a
+    on a.owner_name = p.owner_name;
+
+create or replace view mart.pipeline_conversion_mart as
+with pipeline_state as (
+    select
+        d.deal_id,
+        d.owner_name,
+        d.pipeline_stage,
+        sr.overall_priority_score
+    from mart.deals d
+    left join mart.scoring_results sr
+        on sr.deal_id = d.deal_id
+),
+outcome_state as (
+    select
+        deal_id,
+        count(*) as outcomes_logged,
+        sum(case when outcome_type = 'meeting' then 1 else 0 end) as meetings_booked,
+        sum(case when outcome_type = 'pipeline_stage' and outcome_value = 'qualified' then 1 else 0 end) as qualified_outcomes
+    from mart.deal_outcomes
+    group by 1
+)
+select
+    p.owner_name,
+    p.pipeline_stage,
+    count(*) as deal_count,
+    avg(p.overall_priority_score) as avg_priority_score,
+    sum(coalesce(o.outcomes_logged, 0)) as outcomes_logged,
+    sum(coalesce(o.meetings_booked, 0)) as meetings_booked,
+    sum(coalesce(o.qualified_outcomes, 0)) as qualified_outcomes
+from pipeline_state p
+left join outcome_state o
+    on o.deal_id = p.deal_id
+group by 1,2;
+
+create or replace view mart.investor_engagement_mart as
+with joined as (
+    select
+        c.investor_id,
+        o.deal_id,
+        o.channel,
+        o.event_status,
+        o.sent_at
+    from mart.outreach_events o
+    join mart.contacts c
+        on c.contact_id = o.contact_id
+    where c.investor_id is not null
+)
+select
+    investor_id,
+    deal_id,
+    count(*) as outreach_touch_count,
+    sum(case when event_status = 'responded' then 1 else 0 end) as responded_touch_count,
+    max(sent_at) as latest_outreach_at
+from joined
+group by 1,2;

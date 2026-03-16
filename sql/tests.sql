@@ -94,3 +94,20 @@ select *
 from mart.semantic_metrics_mart
 where outreach_response_rate < 0
    or outreach_response_rate > 1;
+
+select *
+from mart.source_performance_mart
+where distinct_signals > landed_signals;
+
+select *
+from mart.owner_capacity_mart
+where open_deals < 0
+   or crm_activities_30d < 0;
+
+select *
+from mart.pipeline_conversion_mart
+where deal_count < qualified_outcomes;
+
+select *
+from mart.investor_engagement_mart
+where responded_touch_count > outreach_touch_count;

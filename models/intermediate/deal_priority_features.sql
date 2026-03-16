@@ -1,25 +1,3 @@
-with signal_rollup as (
-    select
-        normalized_company_name,
-        count(*) as signal_count_all_time,
-        count_if(event_timestamp >= dateadd('day', -30, current_timestamp())) as signal_count_30d,
-        count_if(event_type = 'funding_announcement' and event_timestamp >= dateadd('day', -90, current_timestamp())) as funding_signal_count_90d,
-        count_if(event_type = 'hiring_spike' and event_timestamp >= dateadd('day', -30, current_timestamp())) as hiring_signal_count_30d,
-        count_if(event_type = 'leadership_change' and event_timestamp >= dateadd('day', -60, current_timestamp())) as leadership_signal_count_60d,
-        max(event_timestamp) as latest_signal_timestamp
-    from {{ ref('stg_signals') }}
-    group by 1
-),
-crm_activity_rollup as (
-    select
-        normalized_company_name,
-        count(*) as crm_activity_count_all_time,
-        count_if(activity_timestamp >= dateadd('day', -30, current_timestamp())) as crm_activity_count_30d,
-        count_if(activity_type = 'meeting_booked' and activity_timestamp >= dateadd('day', -90, current_timestamp())) as meeting_booked_count_90d,
-        max(activity_timestamp) as latest_crm_activity_timestamp
-    from {{ ref('stg_crm_activities') }}
-    group by 1
-),
 deal_base as (
     select
         d.deal_id,
@@ -52,21 +30,24 @@ assembled as (
         b.updated_at,
         b.account_id,
         coalesce(b.match_confidence, 0.25) as entity_resolution_confidence,
-        coalesce(s.signal_count_all_time, 0) as signal_count_all_time,
-        coalesce(s.signal_count_30d, 0) as signal_count_30d,
-        coalesce(s.funding_signal_count_90d, 0) as funding_signal_count_90d,
-        coalesce(s.hiring_signal_count_30d, 0) as hiring_signal_count_30d,
-        coalesce(s.leadership_signal_count_60d, 0) as leadership_signal_count_60d,
+        coalesce(s.distinct_signal_days, 0) as signal_count_all_time,
+        least(coalesce(s.distinct_signal_days, 0), 30) as signal_count_30d,
+        coalesce(s.funding_signal_days, 0) as funding_signal_count_90d,
+        coalesce(s.hiring_signal_days, 0) as hiring_signal_count_30d,
+        coalesce(s.leadership_signal_days, 0) as leadership_signal_count_60d,
         coalesce(a.crm_activity_count_all_time, 0) as crm_activity_count_all_time,
         coalesce(a.crm_activity_count_30d, 0) as crm_activity_count_30d,
-        coalesce(a.meeting_booked_count_90d, 0) as meeting_booked_count_90d,
+        coalesce(a.meetings_booked_90d, 0) as meeting_booked_count_90d,
+        coalesce(ec.data_completeness_score, 0.35) as data_completeness_score,
         s.latest_signal_timestamp,
         a.latest_crm_activity_timestamp
     from deal_base b
-    left join signal_rollup s
+    left join {{ ref('company_signal_rollup') }} s
         on s.normalized_company_name = b.normalized_company_name
-    left join crm_activity_rollup a
+    left join {{ ref('crm_activity_rollup') }} a
         on a.normalized_company_name = b.normalized_company_name
+    left join {{ ref('enrichment_completeness') }} ec
+        on ec.normalized_company_name = b.normalized_company_name
 )
 select
     deal_id,
@@ -86,6 +67,7 @@ select
     crm_activity_count_all_time,
     crm_activity_count_30d,
     meeting_booked_count_90d,
+    data_completeness_score,
     latest_signal_timestamp,
     latest_crm_activity_timestamp,
     case
