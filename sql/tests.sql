@@ -17,3 +17,51 @@ select *
 from mart.scoring_results
 where overall_priority_score < 0
    or overall_priority_score > 1;
+
+select
+    source_record_id,
+    count(*)
+from raw.deal_signals_raw
+group by 1
+having count(*) > 1;
+
+select *
+from mart.deals d
+left join mart.scoring_results sr
+    on sr.deal_id = d.deal_id
+where sr.deal_id is null;
+
+select *
+from mart.crm_activities
+where activity_timestamp > current_timestamp();
+
+select
+    deal_id,
+    investor_id,
+    count(*)
+from mart.scoring_results
+group by 1,2
+having count(*) > 1;
+
+select *
+from mart.investor_profiles
+where relationship_strength < 0
+   or relationship_strength > 1;
+
+select *
+from mart.outreach_events
+where channel not in ('email', 'linkedin', 'call', 'meeting');
+
+select *
+from mart.crm_activities a
+left join mart.deals d
+    on d.deal_id = a.deal_id
+where a.deal_id is not null
+  and d.deal_id is null;
+
+select
+    normalized_name,
+    count(distinct company_id) as distinct_company_ids
+from mart.companies
+group by 1
+having count(distinct company_id) > 1;

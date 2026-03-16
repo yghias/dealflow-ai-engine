@@ -36,6 +36,22 @@ join mart.scoring_results sr on sr.investor_id = i.investor_id
 join mart.deals d on d.deal_id = sr.deal_id
 join mart.companies c on c.company_id = d.company_id;
 
+create or replace view mart.investor_targeting_mart as
+select
+    im.deal_id,
+    im.company_name,
+    im.investor_id,
+    im.investor_name,
+    im.investor_fit_score,
+    im.investor_rank,
+    ip.average_check_size,
+    ip.stage_preference,
+    ip.relationship_strength
+from mart.investor_matching_mart im
+join mart.investor_profiles ip
+    on ip.investor_id = im.investor_id
+where im.investor_rank <= 15;
+
 create or replace view mart.signal_activity_mart as
 with deduped as (
     select
@@ -71,4 +87,77 @@ select
     ) as response_rate
 from mart.outreach_events oe
 join mart.deals d on d.deal_id = oe.deal_id
+group by 1,2;
+
+create or replace view mart.crm_lifecycle_mart as
+with activity_rollup as (
+    select
+        deal_id,
+        owner_name,
+        min(activity_timestamp) as first_activity_at,
+        max(activity_timestamp) as latest_activity_at,
+        count(*) as total_activities,
+        count_if(activity_type = 'meeting_booked') as meetings_booked,
+        count_if(activity_type = 'task_created') as tasks_created
+    from mart.crm_activities
+    group by 1,2
+)
+select
+    a.deal_id,
+    d.pipeline_stage,
+    a.owner_name,
+    a.first_activity_at,
+    a.latest_activity_at,
+    a.total_activities,
+    a.meetings_booked,
+    a.tasks_created,
+    datediff('day', d.created_at, coalesce(a.latest_activity_at, current_timestamp())) as days_since_deal_created
+from activity_rollup a
+join mart.deals d
+    on d.deal_id = a.deal_id;
+
+create or replace view mart.deal_velocity_mart as
+select
+    pipeline_stage,
+    owner_name,
+    count(*) as deal_count,
+    avg(datediff('day', created_at, coalesce(updated_at, current_timestamp()))) as avg_pipeline_days,
+    max(datediff('day', created_at, coalesce(updated_at, current_timestamp()))) as max_pipeline_days
+from mart.deals
+group by 1,2;
+
+create or replace view mart.investor_relationship_graph_mart as
+with investor_pairs as (
+    select
+        a.investor_id as investor_id_left,
+        b.investor_id as investor_id_right,
+        count(distinct a.company_id) as shared_company_count
+    from mart.scoring_results a
+    join mart.scoring_results b
+        on a.company_id = b.company_id
+       and a.investor_id < b.investor_id
+       and a.investor_id is not null
+       and b.investor_id is not null
+    group by 1,2
+)
+select
+    investor_id_left,
+    investor_id_right,
+    shared_company_count,
+    case
+        when shared_company_count >= 4 then 'strong'
+        when shared_company_count >= 2 then 'medium'
+        else 'weak'
+    end as edge_strength_band
+from investor_pairs;
+
+create or replace view mart.signal_quality_mart as
+select
+    source_system,
+    event_type,
+    count(*) as landed_signals,
+    count(distinct source_record_id) as distinct_signals,
+    sum(case when payload:company_name::string is null then 1 else 0 end) as missing_company_name_count,
+    sum(case when payload:website::string is null then 1 else 0 end) as missing_website_count
+from raw.deal_signals_raw
 group by 1,2;

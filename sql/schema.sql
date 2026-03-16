@@ -1,6 +1,8 @@
 create schema if not exists raw;
 create schema if not exists staging;
+create schema if not exists intermediate;
 create schema if not exists mart;
+create schema if not exists ops;
 
 create or replace table raw.deal_signals_raw (
     source_record_id string,
@@ -9,6 +11,119 @@ create or replace table raw.deal_signals_raw (
     event_timestamp timestamp_ntz,
     payload variant,
     loaded_at timestamp_ntz default current_timestamp()
+);
+
+create or replace table raw.crm_accounts_raw (
+    source_record_id string,
+    source_system string,
+    extracted_at timestamp_ntz,
+    payload variant,
+    loaded_at timestamp_ntz default current_timestamp()
+);
+
+create or replace table raw.crm_activities_raw (
+    source_record_id string,
+    source_system string,
+    extracted_at timestamp_ntz,
+    payload variant,
+    loaded_at timestamp_ntz default current_timestamp()
+);
+
+create or replace table raw.investor_directory_raw (
+    source_record_id string,
+    source_system string,
+    extracted_at timestamp_ntz,
+    payload variant,
+    loaded_at timestamp_ntz default current_timestamp()
+);
+
+create or replace table staging.company_signal_events (
+    source_record_id string,
+    source_system string,
+    event_type string,
+    event_timestamp timestamp_ntz,
+    company_name string,
+    normalized_company_name string,
+    website string,
+    domain string,
+    sector string,
+    employee_count number,
+    funding_round string,
+    funding_amount_usd number(18,2),
+    investor_name string,
+    loaded_at timestamp_ntz
+);
+
+create or replace table staging.crm_accounts (
+    account_id string,
+    account_name string,
+    normalized_account_name string,
+    owner_name string,
+    sector string,
+    stage string,
+    last_activity_at timestamp_ntz,
+    extracted_at timestamp_ntz,
+    loaded_at timestamp_ntz
+);
+
+create or replace table staging.crm_activities (
+    crm_activity_id string,
+    company_name string,
+    normalized_company_name string,
+    deal_id string,
+    activity_type string,
+    activity_status string,
+    activity_timestamp timestamp_ntz,
+    owner_name string,
+    loaded_at timestamp_ntz
+);
+
+create or replace table staging.investor_directory (
+    investor_id string,
+    investor_name string,
+    normalized_investor_name string,
+    investor_type string,
+    focus_sectors string,
+    geography_focus string,
+    average_check_size number(18,2),
+    extracted_at timestamp_ntz,
+    loaded_at timestamp_ntz
+);
+
+create or replace table intermediate.company_entity_matches (
+    source_record_id string,
+    company_name string,
+    normalized_company_name string,
+    matched_account_id string,
+    matched_account_name string,
+    match_method string,
+    match_confidence number(10,4),
+    loaded_at timestamp_ntz
+);
+
+create or replace table intermediate.deal_priority_features (
+    deal_id string,
+    company_id string,
+    latest_signal_timestamp timestamp_ntz,
+    signal_count_30d number,
+    funding_signal_count_90d number,
+    hiring_signal_count_30d number,
+    crm_activity_count_30d number,
+    investor_engagement_count_90d number,
+    relationship_strength_score number(10,4),
+    data_completeness_score number(10,4),
+    computed_at timestamp_ntz
+);
+
+create or replace table intermediate.investor_fit_features (
+    deal_id string,
+    investor_id string,
+    sector_alignment_score number(10,4),
+    stage_alignment_score number(10,4),
+    geography_alignment_score number(10,4),
+    historical_participation_score number(10,4),
+    relationship_strength_score number(10,4),
+    computed_at timestamp_ntz
 );
 
 create or replace table mart.companies (
@@ -138,4 +253,14 @@ create or replace table mart.scoring_results (
     overall_priority_score number(10,4),
     score_version string,
     created_at timestamp_ntz
+);
+
+create or replace table ops.pipeline_runs (
+    pipeline_run_id string primary key,
+    pipeline_name string,
+    run_status string,
+    started_at timestamp_ntz,
+    completed_at timestamp_ntz,
+    row_count number,
+    error_message string
 );
