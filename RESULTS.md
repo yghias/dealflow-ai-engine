@@ -1,11 +1,16 @@
 # Results
 
-This file is designed to capture measured impact once the platform is exercised with real or simulated workloads.
+## Platform Outcome Metrics
+- Signal-to-ranked-queue publication latency.
+- Ranked item acceptance rate by owner and source.
+- Recommendation-to-task conversion rate.
+- Time from signal detection to first CRM action.
+- Pipeline advancement rate attributed to ranked signals.
+- Recommendation quality by prompt version and score band.
 
-## Suggested Metrics
-- Signal-to-opportunity conversion rate.
-- Recommendation acceptance rate.
-- Average time from signal detection to first action.
-- CRM task completion rate.
-- Precision by signal type and source.
-- Prompt version win rate in benchmark evaluation.
+## Data Product Quality Metrics
+- Source freshness SLA attainment.
+- Duplicate signal rate.
+- Entity resolution manual review rate.
+- CRM writeback retry rate.
+- Warehouse model test pass rate.

@@ -17,3 +17,9 @@ def test_mock_signals_endpoint() -> None:
     response = client.get("/signals/mock")
     assert response.status_code == 200
     assert len(response.json()) >= 1
+
+
+def test_ranked_queue_endpoint() -> None:
+    response = client.get("/signals/queue")
+    assert response.status_code == 200
+    assert response.json()["items"][0]["organization_name"] == "Acme Data Systems"

@@ -1,24 +1,18 @@
 # Governance
 
-## Goals
-- Maintain trust in external data and AI-assisted recommendations.
-- Preserve reproducibility for decision-making and audit.
-- Minimize risk around PII, sensitive CRM notes, and model-generated output.
+## Objectives
+- Preserve traceability from raw signals to ranked queues, recommendations, and CRM actions.
+- Keep warehouse transformations reproducible across reruns and late-arriving source data.
+- Apply explicit controls to CRM-derived data, external provider data, and AI-generated output.
 
-## Governance Controls
-- Source provenance on externally derived attributes.
-- Prompt and model version tracking.
-- Field-level PII tagging in canonical schemas.
-- Role-based access for CRM writeback and sensitive record views.
-- Retention policies for raw documents, prompts, outputs, and logs.
-- Review workflows for low-confidence entity matches and AI recommendations.
+## Required Controls
+- Source provenance on each landed and curated attribute.
+- Prompt version, model name, and request identifier on every recommendation artifact.
+- Manual override capture for entity resolution and queue suppression.
+- PII classification for CRM and contact-derived columns.
+- Retention policies for raw payloads, curated marts, prompts, and recommendation outputs.
 
-## Lineage Expectations
-- Dashboards must trace back to marts, core tables, staging data, and raw payloads.
-- Scoring and strategy recommendations must be reproducible from stored snapshots.
-- Manual overrides should be captured as first-class events, not hidden edits.
-
-## Data Stewardship
-- Platform engineering owns schema evolution and pipeline reliability.
-- Operations teams own CRM field mappings and business routing rules.
-- AI owners own prompt templates, benchmark sets, and release criteria.
+## Ownership
+- Platform engineering owns warehouse schemas, Airflow DAGs, SQL models, and data contracts.
+- Deal operations owns routing policies, queue suppression logic, and CRM mapping rules.
+- AI platform owners own prompt catalog, evaluation policy, and release controls.

@@ -1,21 +1,18 @@
 # Observability
 
-## Pillars
-- Logs: structured JSON logs with run IDs, entity IDs, and external IDs.
-- Metrics: ingestion freshness, pipeline latency, error rates, model cost, and business conversion.
-- Traces: correlated flows across ingestion, scoring, generation, and CRM writeback.
-- Audits: explanation views for why a recommendation or task was created.
+## Service-Level Indicators
+- Source freshness lag by connector.
+- Airflow DAG success rate and runtime.
+- Warehouse model runtime and failure counts.
+- Ranked queue publication latency.
+- CRM task dispatch success and replay backlog.
+- Recommendation schema validation pass rate.
 
-## Key Monitors
-- Connector freshness lag by source.
-- Duplicate signal rate spikes.
-- Entity match confidence distribution shifts.
-- Strategy generation schema failure rate.
-- CRM sync error count and retry backlog.
-- Daily model spend and latency percentiles.
+## Logging
+- Python services emit structured logs with `run_id`, `source_system`, `external_id`, and `warehouse_batch_id`.
+- Connector retries and downstream writebacks emit attempt counts and terminal state.
 
-## Operational Dashboards
-- Pipeline operations dashboard.
-- Source health dashboard.
-- AI performance dashboard.
-- Funnel and conversion dashboard.
+## Monitoring
+- Airflow alerts for missed SLAs and repeated retries.
+- Warehouse test failures page the owning pipeline team.
+- Queue drops, score anomalies, and CRM writeback failures trigger operational alerts.

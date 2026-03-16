@@ -1,16 +1,15 @@
 # Roadmap
 
-## Phase 1
-- Foundation repo and data model.
-- Basic ingestion connectors.
-- Canonical entities and scoring MVP.
+## Near Term
+- Replace fixture-backed ranked queue reads with Snowflake-backed query execution.
+- Add owner routing policy tables and suppression controls.
+- Expand CRM extracts for task and activity attribution.
 
-## Phase 2
-- Strategy generation with structured outputs.
-- CRM writeback adapters and task orchestration.
-- Baseline observability and analytics marts.
+## Medium Term
+- Introduce recommendation approval workflows and replay-safe dispatch jobs.
+- Add relationship-aware retrieval for sponsor and executive overlap analysis.
+- Expand benchmark coverage for prompt evaluation and release gating.
 
-## Phase 3
-- Feedback loops, benchmark evaluation, and prompt governance.
-- Optional graph intelligence and semantic retrieval.
-- Production hardening and deployment automation.
+## Long Term
+- Add streaming ingestion where batch latency is insufficient.
+- Expand warehouse marts for territory planning and source spend optimization.

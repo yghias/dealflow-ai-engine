@@ -1,7 +1,14 @@
 from fastapi import APIRouter, FastAPI
 
 from dealflow_ai_engine.api.routes.health import router as health_router
-from dealflow_ai_engine.api.schemas.common import RankedSignal, SignalPayload, StrategyRequest, StrategyResponse
+from dealflow_ai_engine.analytics.warehouse import FixtureWarehouse
+from dealflow_ai_engine.api.schemas.common import (
+    RankedQueueResponse,
+    RankedSignal,
+    SignalPayload,
+    StrategyRequest,
+    StrategyResponse,
+)
 from dealflow_ai_engine.config.logging import configure_logging
 from dealflow_ai_engine.config.settings import get_settings
 from dealflow_ai_engine.ingestion.connectors.mock_signals import fetch_mock_signals
@@ -22,6 +29,12 @@ router = APIRouter(tags=["workflow"])
 @router.get("/signals/mock", response_model=list[SignalPayload])
 def list_mock_signals() -> list[SignalPayload]:
     return fetch_mock_signals()
+
+
+@router.get("/signals/queue", response_model=RankedQueueResponse)
+def ranked_queue_endpoint() -> RankedQueueResponse:
+    warehouse = FixtureWarehouse()
+    return RankedQueueResponse(items=[RankedSignal(**item) for item in warehouse.read_ranked_queue()])
 
 
 @router.post("/signals/rank", response_model=RankedSignal)

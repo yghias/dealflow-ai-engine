@@ -25,6 +25,7 @@ class RankedSignal(BaseModel):
     signal_type: str
     score: float
     rationale: list[str]
+    owner_name: str = "unassigned_queue"
 
 
 class StrategyRequest(BaseModel):
@@ -47,3 +48,7 @@ class HealthResponse(BaseModel):
     status: str
     environment: str
     dependencies: dict[str, str]
+
+
+class RankedQueueResponse(BaseModel):
+    items: list[RankedSignal]

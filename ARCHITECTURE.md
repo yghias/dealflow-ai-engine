@@ -1,122 +1,99 @@
 # Architecture
 
 ## System Context
-`dealflow-ai-engine` sits between external signal sources, internal CRM systems, and downstream analytics. It behaves as both an intelligence platform and an operational automation layer.
+`dealflow-ai-engine` is a warehouse-centric platform for signal ingestion, enrichment, ranking, strategy preparation, CRM workflow automation, and outcome measurement. Snowflake holds the curated operating state, Airflow coordinates ingestion and transformation runs, and Python services provide connector logic, orchestration helpers, and tightly scoped APIs.
 
 ```mermaid
 flowchart TB
     subgraph Sources
-        S1["News / PR APIs"]
-        S2["Job Posting Feeds"]
-        S3["Web / Blogs"]
-        S4["Filings / Transcripts"]
-        S5["CRM Activity"]
-        S6["Manual Uploads"]
+        S1["News, PR, Market Data"]
+        S2["Hiring and Job Feeds"]
+        S3["CRM Extracts"]
+        S4["Company Websites"]
+        S5["Filings and Transcript Sources"]
+        S6["Manual Analyst Uploads"]
     end
 
-    subgraph Platform
-        P1["Ingestion Layer"]
-        P2["Entity + Enrichment Layer"]
-        P3["Scoring Layer"]
-        P4["AI Strategy Engine"]
-        P5["Orchestration Layer"]
-        P6["Analytics + Feedback"]
-        P7["Optional Graph Layer"]
+    subgraph Execution
+        E1["Python Connectors"]
+        E2["Airflow DAGs"]
+        E3["API Control Plane"]
     end
 
-    subgraph Systems
-        T1["Postgres"]
-        T2["CRM"]
-        T3["Slack / Email"]
-        T4["BI / Dashboards"]
+    subgraph Warehouse
+        W1["Snowflake Raw"]
+        W2["Snowflake Staging"]
+        W3["Intermediate Models"]
+        W4["Marts and Semantic Datasets"]
     end
 
-    Sources --> P1
-    P1 --> P2
-    P2 --> P3
-    P3 --> P4
-    P4 --> P5
-    P5 --> T2
-    P5 --> T3
-    T2 --> P6
-    P6 --> T4
-    P6 --> P3
-    P6 --> P4
-    P2 --> P7
-    P7 --> P4
-    Platform --> T1
+    subgraph Consumers
+        C1["AI Strategy Service"]
+        C2["CRM Writeback"]
+        C3["Operational Dashboards"]
+        C4["Coverage Queues"]
+    end
+
+    Sources --> E1
+    E1 --> W1
+    E2 --> W2
+    W2 --> W3
+    W3 --> W4
+    W4 --> C1
+    W4 --> C3
+    W4 --> C4
+    C1 --> C2
+    C2 --> W1
+    E3 --> C2
 ```
 
-## Component Responsibilities
+## Service Boundaries
 
-### Ingestion Layer
-- Connector adapters per source.
-- Incremental extraction and checkpoint storage.
-- Raw payload retention.
-- Canonical signal normalization and deduplication.
+### Python Layer
+- External source connectors and payload loaders.
+- Airflow DAG definitions and execution wrappers.
+- API endpoints for health, fixture-driven smoke tests, and controlled workflow runs.
+- CRM adapter implementations and idempotent writeback helpers.
 
-### Entity and Enrichment Layer
-- NLP extraction from unstructured signals.
-- Match and merge against canonical organizations and people.
-- CRM crosswalk management.
-- External enrichment snapshots with provenance.
+### Warehouse Layer
+- Source-normalized staging models.
+- Entity resolution and scoring input models.
+- Ranked queue, owner worklist, source quality, and outcome marts.
+- Data quality tests and reconciliation queries.
 
-### Scoring Layer
-- Feature computation from signals, enrichment, CRM state, and prior outcomes.
-- Weighted rules-based ranking first.
-- Upgrade path to learning-to-rank or classification models.
+### AI Layer
+- Prompt catalog and request/response schemas.
+- Strategy request dataset generation from warehouse marts.
+- Recommendation storage and feedback capture.
 
-### AI Strategy Engine
-- Prompt orchestration with structured response contracts.
-- Retrieval of playbooks, examples, and prior winning patterns.
-- Validation and confidence routing.
+## Architecture Decisions
+- Snowflake is the source of curated truth for ranked queues, strategy requests, and platform metrics.
+- SQL models own score assembly, prioritization inputs, KPI definitions, and reporting logic.
+- Python avoids heavy business transformation logic and instead orchestrates loads, triggers, and integrations.
+- CRM writeback is isolated from warehouse scoring to prevent source outages from blocking ranking refreshes.
 
-### Orchestration Layer
-- Task creation and routing.
-- SLA and retry policies.
-- Integration event delivery to CRM, Slack, and review queues.
-
-### Analytics and Feedback
-- Outcome attribution.
-- Funnel performance and source quality.
-- AI and ranking evaluation dashboards.
-- Prompt/model drift and acceptance metrics.
-
-### Optional Graph Layer
-- Relationship search for warm intro paths, board overlap, and portfolio adjacency.
-- Graph projection from canonical entities and role mappings.
-
-## Key Architecture Decisions
-- Postgres is the canonical operational store.
-- External systems are accessed through isolated adapters.
-- AI output is structured JSON first, narrative second.
-- Every recommendation is tied to features, evidence, prompt version, and model run metadata.
-- Human review is built into low-confidence resolution and strategy workflows.
-
-## Runtime Boundaries
-
+## Execution Flow
 ```mermaid
 sequenceDiagram
-    participant Source as External Source
-    participant Ingest as Ingestion Job
-    participant Core as Postgres Core
-    participant Score as Scoring Service
-    participant LLM as Strategy Engine
-    participant Orchestrator as Task Orchestrator
-    participant CRM as CRM
+    participant Source as Source
+    participant Connector as Python Connector
+    participant Snowflake as Snowflake
+    participant Airflow as Airflow
+    participant SQL as SQL Models
+    participant AI as AI Strategy Service
+    participant CRM as CRM Adapter
 
-    Source->>Ingest: New signal payload
-    Ingest->>Core: raw_document + signal_event
-    Ingest->>Core: extracted entities
-    Score->>Core: feature_snapshot + score_result
-    LLM->>Core: strategy_recommendation + model_run
-    Orchestrator->>CRM: create task/note
-    CRM->>Core: outcome_event and sync state
+    Source->>Connector: incremental payloads
+    Connector->>Snowflake: raw load batch
+    Airflow->>SQL: staging + intermediate + marts
+    SQL->>AI: strategy request dataset
+    AI->>CRM: task or note payload
+    CRM->>Snowflake: activity and outcome snapshot
+    Airflow->>SQL: attribution and effectiveness refresh
 ```
 
 ## Non-Functional Requirements
-- Idempotent ingestion and sync jobs.
-- Full provenance for externally sourced facts.
-- Observable end-to-end flows with run IDs and correlation IDs.
-- Configurable cost controls for model usage.
-- Environment-aware deployment with promotion gates.
+- Idempotent loads using source watermarks and deterministic merge keys.
+- Environment separation across development, staging, and production Snowflake objects and Airflow connections.
+- Warehouse tests required before queue publication and CRM writeback.
+- Full traceability from raw signal to ranked queue, strategy recommendation, and CRM outcome.

@@ -2,14 +2,12 @@
 
 ```mermaid
 flowchart TB
-    A["Signal Sources"] --> B["Ingestion Jobs"]
-    B --> C["Canonical Postgres Model"]
-    C --> D["Scoring + Ranking"]
-    D --> E["AI Strategy Engine"]
-    E --> F["Task Orchestrator"]
-    F --> G["CRM / Slack"]
-    G --> H["Outcomes + Feedback"]
-    H --> I["Analytics Marts"]
-    H --> D
-    H --> E
+    A["Signal Sources and CRM Extracts"] --> B["Python Connectors"]
+    B --> C["Snowflake Raw and Staging"]
+    C --> D["SQL Models and Marts"]
+    D --> E["AI Strategy Service"]
+    D --> F["Operational Dashboards"]
+    E --> G["CRM Writeback"]
+    G --> H["Outcomes and Activities"]
+    H --> C
 ```

@@ -1,27 +1,29 @@
 # Runbook
 
 ## Local Development
-1. Start Postgres with `docker compose up -d postgres`.
-2. Install dependencies with `pip install -e .[dev]`.
-3. Export environment variables from `.env`.
-4. Run API: `uvicorn dealflow_ai_engine.api.app:app --reload`.
-5. Execute tests: `pytest`.
+1. Start local services with `docker compose up -d`.
+2. Install dependencies with `pip install -r requirements.txt`.
+3. Populate `.env` from `.env.example`.
+4. Run the API with `uvicorn dealflow_ai_engine.api.app:app --reload`.
+5. Execute validation with `pytest`.
 
 ## Common Operations
 
-### Backfill Signals
-- Run the relevant ingestion job with a source name and time window.
-- Validate record counts in staging before promoting downstream.
+### Backfill Source Window
+- Run the Airflow DAG or connector wrapper for the affected source and time range.
+- Verify raw row counts and watermark movement.
+- Re-run staging and intermediate model selections for the impacted window.
 
-### Recompute Scores
-- Trigger the scoring service for a target cohort or run window.
-- Compare output distributions with the prior baseline.
+### Republish Ranked Queue
+- Execute the warehouse transformation DAG through marts.
+- Validate score distribution checks and owner queue counts.
+- Release strategy generation only after tests pass.
 
-### Pause CRM Writeback
+### Disable CRM Dispatch
 - Set `CRM_WRITEBACK_ENABLED=false`.
-- Confirm tasks continue to persist internally for replay.
+- Continue signal ingestion and queue publication to keep warehouse state current.
 
 ## Incident Response
-- Triage source outages by connector and freshness lag.
-- Route schema drift issues to ingestion maintainers.
-- Disable autonomous strategy dispatch if schema validation or hallucination metrics degrade.
+- Source outage: stop the connector, preserve watermark state, and page the integration owner.
+- Warehouse failure: stop downstream strategy generation and CRM dispatch until marts are current.
+- Recommendation quality issue: disable automated dispatch and route output for human review.

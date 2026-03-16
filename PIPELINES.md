@@ -1,61 +1,48 @@
 # Pipelines
 
-## Pipeline Families
+## Pipeline Groups
 
-### 1. Signal Ingestion
-- Extract from external APIs, feeds, and internal activity sources.
-- Store immutable payloads in raw storage.
-- Normalize into canonical signal records.
-- Deduplicate and tag signal types.
+### Signal Landing
+- Python connectors extract data from external APIs, files, and CRM systems.
+- Raw payloads are loaded into Snowflake with batch ids and source watermarks.
+- Connector state is stored separately from transformation logic to preserve replayability.
 
-### 2. Entity Resolution and Enrichment
-- Parse text and identify entities.
-- Resolve against canonical records and CRM mappings.
-- Enrich matched records with provider data.
-- Store snapshots and resolution confidence.
+### Warehouse Transformation
+- Staging models standardize ids, timestamps, enumerations, and payload structure.
+- Intermediate models perform company resolution, CRM matching, score input assembly, and outcome attribution.
+- Marts publish ranked work queues, source quality datasets, and recommendation effectiveness reporting.
 
-### 3. Scoring and Ranking
-- Build features from signal, entity, and CRM context.
-- Apply rules-based ranking with explainable components.
-- Publish review queues and candidate opportunities.
+### Strategy Generation
+- Airflow reads the ranked queue mart and submits strategy requests for approved cohorts.
+- The AI service only consumes curated datasets, not source payloads.
+- Generated recommendations are validated and written back with prompt and model metadata.
 
-### 4. Strategy Generation
-- Retrieve relevant context and prior examples.
-- Run prompt-based strategy generation.
-- Validate structured output and confidence thresholds.
+### CRM Dispatch
+- Approved recommendations are converted into deterministic task payloads.
+- CRM writeback is replay-safe and can be disabled without stopping ranking refresh.
 
-### 5. Task Orchestration
-- Route work to owners and systems.
-- Push tasks to CRM, Slack, or analyst queues.
-- Track execution attempts and state transitions.
-
-### 6. Outcome and Evaluation
-- Sync downstream CRM activity.
-- Attribute results to signals, scores, and strategy versions.
-- Update dashboards and benchmark sets.
-
-## Example Airflow DAG Layout
+## Airflow DAG Layout
 ```mermaid
 flowchart LR
-    A["extract_signals"] --> B["normalize_signals"]
-    B --> C["resolve_entities"]
-    C --> D["run_enrichment"]
-    D --> E["build_features"]
-    E --> F["score_opportunities"]
-    F --> G["generate_strategies"]
-    G --> H["create_tasks"]
-    H --> I["sync_crm_outcomes"]
-    I --> J["refresh_analytics_marts"]
+    A["extract_external_signals"] --> B["load_raw_signals"]
+    B --> C["run_staging_models"]
+    C --> D["run_intermediate_models"]
+    D --> E["publish_ranked_queue_marts"]
+    E --> F["generate_strategies"]
+    F --> G["dispatch_crm_tasks"]
+    G --> H["load_crm_outcomes"]
+    H --> I["refresh_effectiveness_marts"]
+    I --> J["run_data_quality_and_reconciliation"]
 ```
 
-## Idempotency Rules
-- Use source-native event IDs when available.
-- Otherwise hash on normalized URL, title, event time, and source.
-- Upserts must be deterministic on unique business keys.
-- Prompt generation should persist request keys to avoid duplicate recommendations.
-- CRM writes should include client-generated idempotency keys.
+## Scheduling and SLAs
+- High-value external sources: every 30 minutes.
+- CRM extract sync: every 15 minutes when supported.
+- Warehouse transformation DAG: hourly.
+- Recommendation generation for high-priority signals: every 30 minutes.
+- Nightly attribution and performance refresh: complete by 06:00 warehouse local time.
 
-## Data Contracts
-- Each pipeline stage must emit explicit success and failure counters.
-- Each table load must include `run_id`, `processed_at`, and `record_source`.
-- Schema contracts should be validated before promotion to later stages.
+## Idempotency
+- Raw loads keyed on source system, source record id, and ingestion batch id.
+- Curated models deduplicate by latest valid record per business key.
+- CRM tasks use deterministic task keys to prevent duplicate downstream actions.

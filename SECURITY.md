@@ -1,15 +1,12 @@
 # Security
 
 ## Core Controls
-- Secrets stored outside the repository.
-- Least-privilege API tokens for source and CRM integrations.
-- TLS for external service traffic.
-- Encryption at rest for primary stores.
-- PII-aware logging and redaction.
-- Approval boundaries for autonomous CRM writes if business risk is high.
+- Secrets are injected through environment or secret management systems, never committed.
+- Separate service accounts are used for raw loading, transformation execution, and CRM writeback.
+- CRM writeback credentials are isolated from read-only extraction credentials.
+- Sample data excludes sensitive CRM fields and direct contact information.
 
-## Secure Development Practices
-- Dependency scanning in CI.
-- Secret scanning in pre-commit and CI.
-- Separate service accounts by environment.
-- Audit logs for privileged actions and CRM writebacks.
+## Runtime Controls
+- Snowflake roles are segmented by raw landing, transform execution, and read-only analytics.
+- Airflow connections and API credentials are environment-scoped.
+- Container images are scanned before promotion.

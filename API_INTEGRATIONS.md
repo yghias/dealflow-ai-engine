@@ -1,48 +1,23 @@
 # API Integrations
 
-## Integration Philosophy
-- Hide provider-specific details behind adapters.
-- Normalize external objects into canonical contracts before business logic consumes them.
-- Keep read paths and write paths independently testable.
+## Design Principles
+- Keep provider-specific behavior inside adapters.
+- Persist raw provider responses before warehouse transformation.
+- Treat outbound CRM calls as operational side effects with explicit retry and replay handling.
 
-## External Interfaces
+## Source Interfaces
+- News and press release APIs.
+- Hiring feeds and company-change providers.
+- Filing and transcript sources.
+- CRM extracts for accounts, contacts, opportunities, activities, and tasks.
 
-### Signal Providers
-- News APIs.
-- RSS / XML feeds.
-- Job posting APIs.
-- Filing and transcript providers.
-- Web scrapers for company sites.
+## Internal Endpoints
+- `GET /health`
+- `GET /signals/mock`
+- `POST /workflow/process`
 
-### CRM Providers
-- Salesforce.
-- HubSpot.
-- Pipedrive.
-
-### Collaboration Providers
-- Slack.
-- Email provider APIs.
-- Optional ticketing systems.
-
-## Internal Service Endpoints
-
-### `POST /signals/ingest`
-Trigger a signal ingestion run for a configured source.
-
-### `GET /signals/ranked`
-Return ranked opportunities with explanations and latest recommendation status.
-
-### `POST /strategies/generate`
-Generate a strategy for a specific signal or account.
-
-### `POST /tasks/dispatch`
-Dispatch approved tasks into CRM or collaboration channels.
-
-### `GET /health`
-Return readiness and dependency health.
-
-## Adapter Requirements
-- Retries for transient failures.
-- Rate limit awareness.
-- Explicit response mapping into Pydantic models.
-- Structured logging with provider, endpoint, and correlation identifiers.
+## Adapter Controls
+- Timeouts and backoff for every external request.
+- Source-level correlation ids in logs.
+- Stable request and response schemas for warehouse loading.
+- Idempotent CRM writeback using deterministic task keys.

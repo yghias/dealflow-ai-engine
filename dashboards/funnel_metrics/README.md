@@ -1,3 +1,12 @@
 # Funnel Metrics Dashboard
 
-Track signal counts, ranked opportunities, strategies generated, tasks created, and downstream conversion by period.
+## Purpose
+Track the flow from landed signal to ranked queue, recommendation creation, CRM task creation, and downstream pipeline movement.
+
+## Core Metrics
+- Landed signals
+- Ranked queue publications
+- Recommendations generated
+- CRM tasks dispatched
+- Meetings booked
+- Stage advances

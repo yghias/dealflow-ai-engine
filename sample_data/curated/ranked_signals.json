@@ -2,11 +2,11 @@
   {
     "organization_name": "Acme Data Systems",
     "signal_type": "expansion",
-    "score": 0.8755
+    "score": 0.9025
   },
   {
     "organization_name": "BrightForge",
     "signal_type": "funding",
-    "score": 0.813
+    "score": 0.8425
   }
 ]

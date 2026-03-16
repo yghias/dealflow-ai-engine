@@ -6,7 +6,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     app_env: str = "local"
     log_level: str = "INFO"
-    postgres_dsn: str = "postgresql://postgres:postgres@localhost:5432/dealflow"
+    snowflake_account: str = ""
+    snowflake_user: str = ""
+    snowflake_password: str = ""
+    snowflake_warehouse: str = "COMPUTE_WH"
+    snowflake_database: str = "DEALFLOW"
+    snowflake_schema: str = "CORE"
+    snowflake_role: str = "DEALFLOW_ENGINEER"
     openai_api_key: str = ""
     crm_provider: str = "mock"
     crm_writeback_enabled: bool = False

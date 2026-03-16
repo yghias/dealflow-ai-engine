@@ -3,7 +3,7 @@ PYTHON ?= python3
 .PHONY: install test lint run
 
 install:
-	$(PYTHON) -m pip install -e .[dev]
+	$(PYTHON) -m pip install -r requirements.txt
 
 test:
 	pytest

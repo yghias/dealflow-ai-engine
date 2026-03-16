@@ -1,12 +1,12 @@
 # Testing
 
-## Test Layers
-- Unit tests for parsers, scoring logic, prompt builders, and adapters.
-- Integration tests for Postgres persistence, API endpoints, and CRM mapping.
-- Contract tests for source and CRM payload schemas.
-- End-to-end tests covering ingest-to-task flow on sample fixtures.
+## Coverage Model
+- Unit tests cover connector parsing, validation, and workflow control paths.
+- Integration tests cover API endpoints and CRM adapter behavior.
+- SQL tests cover key uniqueness, accepted values, score range constraints, and reconciliation.
+- End-to-end tests cover signal landing through task dispatch using fixtures.
 
-## Test Data Principles
-- Keep fixtures sanitized and deterministic.
-- Include edge cases for duplicate signals, ambiguous entities, and failed CRM writes.
-- Snapshot AI outputs only for schema shape and routing behavior, not exact phrasing.
+## Minimum Expectations
+- Staging models validate required keys and enumerations.
+- Intermediate models validate join completeness and score component ranges.
+- Marts validate freshness, owner routing coverage, and downstream task parity.

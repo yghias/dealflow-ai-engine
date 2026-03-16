@@ -1,10 +1,10 @@
 # Use Cases
 
-## Private Equity Origination
-Detect hiring growth, leadership changes, and product launches that align with an investment thesis, then create a recommended outreach plan and CRM tasks.
+## Origination Queue Management
+Surface companies entering meaningful change windows and route ranked opportunities to the correct coverage owner.
 
-## Corporate Development
-Monitor strategic partnerships, fundraising activity, and regional expansion to surface acquisition or partnership candidates.
+## CRM Next-Best-Action
+Generate evidence-backed follow-up recommendations when new signals materially change account context.
 
-## Relationship Mapping
-Use executive movement and sponsor-portfolio links to identify warm-intro paths and prioritize account engagement.
+## Source Quality Management
+Measure which external feeds lead to accepted recommendations, downstream meetings, and pipeline advancement.

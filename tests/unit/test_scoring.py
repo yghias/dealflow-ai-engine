@@ -6,5 +6,6 @@ def test_rank_signal_returns_positive_score() -> None:
     signal = fetch_mock_signals()[0]
     ranked = rank_signal(signal)
     assert ranked.organization_name == "Acme Data Systems"
-    assert ranked.score > 0
+    assert ranked.score == 0.9025
     assert ranked.rationale
+    assert ranked.owner_name == "Detroit Software Coverage"

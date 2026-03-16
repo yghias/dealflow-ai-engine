@@ -1,63 +1,46 @@
 # dealflow-ai-engine
 
-`dealflow-ai-engine` is an AI-driven deal intelligence and CRM lifecycle automation platform that turns external market signals into prioritized recommendations, operational tasks, and measurable outcomes.
+`dealflow-ai-engine` is the platform repository for signal-driven deal intelligence, counterparty enrichment, AI-assisted strategy generation, and CRM workflow automation. The repository is organized around a Snowflake-first warehouse, Airflow-managed orchestration, SQL-owned transformations, and a thin Python layer for integration and control-plane concerns.
 
-## What This Repository Demonstrates
-- Event-driven data ingestion and normalization for deal sourcing signals.
-- Canonical entity resolution and counterparty enrichment.
-- LLM-backed strategy generation with structured outputs and auditability.
-- Workflow orchestration for CRM, analyst review, and task automation.
-- Feedback-driven evaluation loops across data quality, scoring, and AI outputs.
+## Platform Responsibilities
+- Land external signals and CRM extracts into replayable raw datasets.
+- Normalize source contracts into canonical warehouse models.
+- Publish ranked signal queues and owner worklists from SQL transformations.
+- Assemble grounded strategy request datasets for the recommendation service.
+- Dispatch approved tasks and notes into CRM systems.
+- Measure conversion, latency, source quality, and recommendation effectiveness.
 
-## Platform at a Glance
+## System Overview
 ```mermaid
 flowchart LR
-    A["External Signals"] --> B["Ingestion + Normalization"]
-    B --> C["Entity Resolution + Enrichment"]
-    C --> D["Scoring + Ranking"]
-    D --> E["AI Strategy Engine"]
-    E --> F["Task Orchestration"]
-    F --> G["CRM / Slack / Analyst Queue"]
-    G --> H["Outcome Events"]
-    H --> I["Analytics + Evaluation"]
+    A["External APIs and CRM Extracts"] --> B["Python Connectors"]
+    B --> C["Snowflake Raw + Staging"]
+    C --> D["SQL Models"]
+    D --> E["Ranked Queue Marts"]
+    D --> F["Strategy Request Datasets"]
+    F --> G["AI Strategy Service"]
+    G --> H["CRM Writeback"]
+    H --> I["Outcome and Activity Loads"]
     I --> D
-    I --> E
 ```
 
-## Core Capabilities
-- Detect signals from news, websites, job postings, transcripts, filings, and internal CRM activity.
-- Resolve organizations and people into canonical master records.
-- Rank targets with reproducible features and explainable rules.
-- Generate AI-assisted strategy recommendations tied to evidence and model metadata.
-- Push tasks into CRM or collaboration tools with idempotent writeback patterns.
-- Measure recommendation quality and improve the system through outcome feedback.
+## Key Documents
+- [ARCHITECTURE.md](/Users/yasserghias/Documents/Playground/ARCHITECTURE.md)
+- [DATA_MODEL.md](/Users/yasserghias/Documents/Playground/DATA_MODEL.md)
+- [PIPELINES.md](/Users/yasserghias/Documents/Playground/PIPELINES.md)
+- [RUNBOOK.md](/Users/yasserghias/Documents/Playground/RUNBOOK.md)
+- [OBSERVABILITY.md](/Users/yasserghias/Documents/Playground/OBSERVABILITY.md)
+- [SECURITY.md](/Users/yasserghias/Documents/Playground/SECURITY.md)
 
-## Quick Start
-1. Create a Python 3.11 environment.
-2. Copy `.env.example` to `.env` and fill in local settings.
-3. Start local dependencies with `docker compose up -d postgres`.
-4. Install the project with `pip install -e .[dev]`.
-5. Run the API locally with `uvicorn dealflow_ai_engine.api.app:app --reload`.
-6. Run tests with `pytest`.
+## Local Development
+1. Copy `.env.example` to `.env`.
+2. Install dependencies with `pip install -r requirements.txt`.
+3. Start local services with `docker compose up -d`.
+4. Run the API with `uvicorn dealflow_ai_engine.api.app:app --reload`.
+5. Execute repository validation with `pytest`.
 
-## Document Guide
-- [PLAN.md](/Users/yasserghias/Documents/Playground/PLAN.md): implementation blueprint.
-- [ARCHITECTURE.md](/Users/yasserghias/Documents/Playground/ARCHITECTURE.md): system decomposition and interfaces.
-- [DATA_MODEL.md](/Users/yasserghias/Documents/Playground/DATA_MODEL.md): entity model and schema strategy.
-- [PIPELINES.md](/Users/yasserghias/Documents/Playground/PIPELINES.md): pipeline lifecycle and orchestration.
-- [API_INTEGRATIONS.md](/Users/yasserghias/Documents/Playground/API_INTEGRATIONS.md): external interface contracts.
-- [RUNBOOK.md](/Users/yasserghias/Documents/Playground/RUNBOOK.md): operating procedures.
-
-## Current State
-This repository is intentionally scaffolded as a production-style starter platform. It includes:
-- Detailed architecture and operating documentation.
-- SQL DDL, seeds, and quality checks.
-- A FastAPI-based internal service skeleton.
-- Sample ingestion, scoring, strategy, and CRM integration code.
-- Test scaffolding and sample fixtures for extension.
-
-## Design Principles
-- Preserve canonical internal data models even when upstream systems vary.
-- Make AI outputs structured, versioned, and traceable.
-- Prefer evidence-backed automation and human review gates over opaque autonomy.
-- Treat observability, governance, and reproducibility as first-class features.
+## Operating Principles
+- SQL owns transformation, ranking inputs, marts, and data quality rules.
+- Python owns source ingestion, orchestration, external adapters, and utility execution wrappers.
+- AI output is structured, versioned, evidence-backed, and tied to source warehouse datasets.
+- CRM writeback is idempotent and independently controllable from ranking and strategy generation.

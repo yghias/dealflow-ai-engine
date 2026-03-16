@@ -6,3 +6,8 @@ __pycache__/
 *.pyc
 dist/
 build/
+.DS_Store
+capital-raising-data-platform/
+car-rental-analytics-platform/
+dataops-agent-platform/
+it-staffing-operating-system/

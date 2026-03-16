@@ -1,3 +1,7 @@
 # Strategy Effectiveness Dashboard
 
-Track recommendation acceptance, action completion, prompt version performance, and downstream outcome rates.
+## Purpose
+Track recommendation acceptance, task completion, prompt version performance, and downstream pipeline movement.
+
+## Backing Datasets
+- `mart.mart_strategy_effectiveness`
