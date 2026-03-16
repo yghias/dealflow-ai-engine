@@ -16,14 +16,14 @@
 - Outcome tracking and feedback loops for self-improving prioritization
 
 ## Repository Guide
-- [ARCHITECTURE.md](/Users/yasserghias/Documents/Playground/ARCHITECTURE.md)
-- [DATA_MODEL.md](/Users/yasserghias/Documents/Playground/DATA_MODEL.md)
-- [PIPELINES.md](/Users/yasserghias/Documents/Playground/PIPELINES.md)
-- [AI_WORKFLOWS.md](/Users/yasserghias/Documents/Playground/AI_WORKFLOWS.md)
-- [RUNBOOK.md](/Users/yasserghias/Documents/Playground/RUNBOOK.md)
-- [sql/schema.sql](/Users/yasserghias/Documents/Playground/sql/schema.sql)
-- [sql/marts.sql](/Users/yasserghias/Documents/Playground/sql/marts.sql)
-- [sql/tests.sql](/Users/yasserghias/Documents/Playground/sql/tests.sql)
+- [ARCHITECTURE.md](ARCHITECTURE.md)
+- [DATA_MODEL.md](DATA_MODEL.md)
+- [PIPELINES.md](PIPELINES.md)
+- [AI_WORKFLOWS.md](AI_WORKFLOWS.md)
+- [RUNBOOK.md](RUNBOOK.md)
+- [sql/schema.sql](sql/schema.sql)
+- [sql/marts.sql](sql/marts.sql)
+- [sql/tests.sql](sql/tests.sql)
 
 ## Runtime Assumptions
 - AWS for infrastructure
