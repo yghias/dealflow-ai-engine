@@ -26,6 +26,16 @@
 - [sql/intermediate.sql](sql/intermediate.sql)
 - [sql/reconciliation.sql](sql/reconciliation.sql)
 - [sql/metrics.sql](sql/metrics.sql)
+- [sql/dimensions.sql](sql/dimensions.sql)
+- [sql/facts.sql](sql/facts.sql)
+- [sql/incremental_models.sql](sql/incremental_models.sql)
+- [sql/reports.sql](sql/reports.sql)
+- [sql/source_contracts.sql](sql/source_contracts.sql)
+- [sql/procedures.sql](sql/procedures.sql)
+- [sql/history.sql](sql/history.sql)
+- [sql/quality_checks.sql](sql/quality_checks.sql)
+- [sql/backfills.sql](sql/backfills.sql)
+- [sql/semantic_layer.sql](sql/semantic_layer.sql)
 - [sql/tests.sql](sql/tests.sql)
 
 ## Runtime Assumptions

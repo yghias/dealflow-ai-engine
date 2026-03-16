@@ -7,3 +7,4 @@ tests/**/*.py linguist-vendored
 infrastructure/**/*.tf linguist-vendored
 Dockerfile linguist-vendored
 requirements.txt linguist-vendored
+src/**/*.py linguist-vendored
