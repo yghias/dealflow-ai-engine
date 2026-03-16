@@ -4,3 +4,6 @@ docs/*.png linguist-generated
 sample_data/** linguist-generated
 airflow/**/*.py linguist-detectable=false
 tests/**/*.py linguist-vendored
+infrastructure/**/*.tf linguist-vendored
+Dockerfile linguist-vendored
+requirements.txt linguist-vendored
