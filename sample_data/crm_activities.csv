@@ -1,0 +1,4 @@
+crm_activity_id,company_name,deal_id,activity_type,activity_status,activity_timestamp,owner_name
+crm_001,North Ridge Systems,deal_001,task_created,completed,2026-03-16T13:00:00Z,Growth Equity Coverage
+crm_002,Atlas Core Analytics,deal_002,email_sent,completed,2026-03-16T14:10:00Z,Data Platform Coverage
+crm_003,North Ridge Systems,deal_001,meeting_booked,completed,2026-03-17T09:30:00Z,Growth Equity Coverage

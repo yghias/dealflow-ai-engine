@@ -1,0 +1,69 @@
+[
+  {
+    "source_record_id": "sig_001",
+    "source_system": "funding_feed",
+    "event_type": "funding_announcement",
+    "company_name": "North Ridge Systems",
+    "event_timestamp": "2026-03-16T10:30:00Z",
+    "website": "https://northridgesystems.com",
+    "sector": "Enterprise Software",
+    "employee_count": 220,
+    "funding_round": "Series B",
+    "funding_amount_usd": 40000000,
+    "investor_name": "Summit Peak Ventures"
+  },
+  {
+    "source_record_id": "sig_002",
+    "source_system": "news_api",
+    "event_type": "leadership_change",
+    "company_name": "Atlas Core Analytics",
+    "event_timestamp": "2026-03-16T09:15:00Z",
+    "website": "https://atlascore.ai",
+    "sector": "Data Infrastructure",
+    "employee_count": 140,
+    "investor_name": "Cedar Capital"
+  },
+  {
+    "source_record_id": "sig_003",
+    "source_system": "hiring_api",
+    "event_type": "hiring_spike",
+    "company_name": "Helio Forge",
+    "event_timestamp": "2026-03-16T11:45:00Z",
+    "website": "https://helioforge.com",
+    "sector": "Industrial Software",
+    "employee_count": 310
+  },
+  {
+    "source_record_id": "sig_004",
+    "source_system": "funding_feed",
+    "event_type": "funding_announcement",
+    "company_name": "NorthRidge Systems",
+    "event_timestamp": "2026-03-16T10:32:00Z",
+    "website": "https://northridgesystems.com",
+    "sector": "Enterprise Software",
+    "employee_count": 220,
+    "funding_round": "Series B",
+    "funding_amount_usd": 40000000,
+    "investor_name": "Summit Peak Ventures"
+  },
+  {
+    "source_record_id": "sig_005",
+    "source_system": "company_scrape",
+    "event_type": "product_launch",
+    "company_name": "Signal Harbor",
+    "event_timestamp": "2026-03-14T15:25:00Z",
+    "website": null,
+    "sector": "Fintech",
+    "employee_count": null
+  },
+  {
+    "source_record_id": "sig_006",
+    "source_system": "crm_delta",
+    "event_type": "late_stage_update",
+    "company_name": "North Ridge Systems",
+    "event_timestamp": "2026-03-12T08:00:00Z",
+    "website": "https://northridgesystems.com",
+    "sector": "Enterprise Software",
+    "employee_count": 205
+  }
+]

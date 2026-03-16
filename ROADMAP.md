@@ -1,15 +1,16 @@
 # Roadmap
 
-## Near Term
-- Replace fixture-backed ranked queue reads with Snowflake-backed query execution.
-- Add owner routing policy tables and suppression controls.
-- Expand CRM extracts for task and activity attribution.
+## Phase 1
+- raw ingestion
+- staging and canonical models
+- scoring and ranked marts
 
-## Medium Term
-- Introduce recommendation approval workflows and replay-safe dispatch jobs.
-- Add relationship-aware retrieval for sponsor and executive overlap analysis.
-- Expand benchmark coverage for prompt evaluation and release gating.
+## Phase 2
+- AI strategy generation
+- CRM lifecycle automation
+- outcome feedback loop
 
-## Long Term
-- Add streaming ingestion where batch latency is insufficient.
-- Expand warehouse marts for territory planning and source spend optimization.
+## Phase 3
+- relationship intelligence expansion
+- graph-style investor relationships
+- broader source coverage

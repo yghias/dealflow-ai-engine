@@ -1,12 +1,16 @@
 # Testing
 
-## Coverage Model
-- Unit tests cover connector parsing, validation, and workflow control paths.
-- Integration tests cover API endpoints and CRM adapter behavior.
-- SQL tests cover key uniqueness, accepted values, score range constraints, and reconciliation.
-- End-to-end tests cover signal landing through task dispatch using fixtures.
+## Coverage Areas
+- ingestion parsing and contract validation
+- entity matching
+- enrichment merge logic
+- company and investor scoring
+- CRM automation deduplication
+- SQL duplicate detection
+- referential integrity
+- score anomaly tests
 
-## Minimum Expectations
-- Staging models validate required keys and enumerations.
-- Intermediate models validate join completeness and score component ranges.
-- Marts validate freshness, owner routing coverage, and downstream task parity.
+## Repository Test Layers
+- `sql/tests.sql`
+- notebook validation examples
+- Python unit and integration tests

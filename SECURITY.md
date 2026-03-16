@@ -1,12 +1,12 @@
 # Security
 
-## Core Controls
-- Secrets are injected through environment or secret management systems, never committed.
-- Separate service accounts are used for raw loading, transformation execution, and CRM writeback.
-- CRM writeback credentials are isolated from read-only extraction credentials.
-- Sample data excludes sensitive CRM fields and direct contact information.
+## Access Control
+- role-based access to Snowflake schemas
+- least-privilege service credentials
+- separate writeback credentials for CRM automation
+- restricted access to investor contact data
 
-## Runtime Controls
-- Snowflake roles are segmented by raw landing, transform execution, and read-only analytics.
-- Airflow connections and API credentials are environment-scoped.
-- Container images are scanned before promotion.
+## Sensitive Data Handling
+- redact sensitive payload fragments from logs
+- avoid storing unnecessary PII in sample data
+- audit all CRM writes

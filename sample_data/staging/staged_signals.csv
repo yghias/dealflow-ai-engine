@@ -1,3 +1,0 @@
-source_name,title,url,detected_at,signal_type,organization_name
-mock_news_feed,Acme Data Systems announces Midwest expansion,https://example.com/acme-expansion,2026-03-15T12:00:00Z,expansion,Acme Data Systems
-mock_funding_feed,BrightForge secures Series B funding,https://example.com/brightforge-series-b,2026-03-15T13:00:00Z,funding,BrightForge

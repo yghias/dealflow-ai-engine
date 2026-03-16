@@ -1,46 +1,48 @@
 # dealflow-ai-engine
 
-`dealflow-ai-engine` is the platform repository for signal-driven deal intelligence, counterparty enrichment, AI-assisted strategy generation, and CRM workflow automation. The repository is organized around a Snowflake-first warehouse, Airflow-managed orchestration, SQL-owned transformations, and a thin Python layer for integration and control-plane concerns.
+`dealflow-ai-engine` is a production-oriented enterprise data platform for AI-powered deal intelligence and CRM lifecycle automation. The platform detects external market and company signals, enriches companies and investors, publishes SQL-driven prioritization datasets, generates LLM-backed strategies, and automates CRM actions with outcome feedback loops.
 
-## Platform Responsibilities
-- Land external signals and CRM extracts into replayable raw datasets.
-- Normalize source contracts into canonical warehouse models.
-- Publish ranked signal queues and owner worklists from SQL transformations.
-- Assemble grounded strategy request datasets for the recommendation service.
-- Dispatch approved tasks and notes into CRM systems.
-- Measure conversion, latency, source quality, and recommendation effectiveness.
+## Platform Overview
+- Warehouse-first architecture with Snowflake as the analytical system of record
+- SQL-heavy transformation layer for entity normalization, scoring inputs, marts, and quality rules
+- Python services reserved for ingestion, orchestration, API integrations, LLM calls, and workflow control
+- Airflow orchestration for ingestion, enrichment, scoring, AI strategy generation, CRM automation, and backfills
 
-## System Overview
-```mermaid
-flowchart LR
-    A["External APIs and CRM Extracts"] --> B["Python Connectors"]
-    B --> C["Snowflake Raw + Staging"]
-    C --> D["SQL Models"]
-    D --> E["Ranked Queue Marts"]
-    D --> F["Strategy Request Datasets"]
-    F --> G["AI Strategy Service"]
-    G --> H["CRM Writeback"]
-    H --> I["Outcome and Activity Loads"]
-    I --> D
-```
+## Core Capabilities
+- Signal detection for funding rounds, leadership changes, acquisitions, partnerships, and hiring spikes
+- Entity enrichment for companies, investors, contacts, and relationship activity
+- Deal strategy generation and outreach planning using LLMs
+- CRM automation for task creation, note publishing, and lifecycle updates
+- Outcome tracking and feedback loops for self-improving prioritization
 
-## Key Documents
+## Repository Guide
 - [ARCHITECTURE.md](/Users/yasserghias/Documents/Playground/ARCHITECTURE.md)
 - [DATA_MODEL.md](/Users/yasserghias/Documents/Playground/DATA_MODEL.md)
 - [PIPELINES.md](/Users/yasserghias/Documents/Playground/PIPELINES.md)
+- [AI_WORKFLOWS.md](/Users/yasserghias/Documents/Playground/AI_WORKFLOWS.md)
 - [RUNBOOK.md](/Users/yasserghias/Documents/Playground/RUNBOOK.md)
-- [OBSERVABILITY.md](/Users/yasserghias/Documents/Playground/OBSERVABILITY.md)
-- [SECURITY.md](/Users/yasserghias/Documents/Playground/SECURITY.md)
+- [sql/schema.sql](/Users/yasserghias/Documents/Playground/sql/schema.sql)
+- [sql/marts.sql](/Users/yasserghias/Documents/Playground/sql/marts.sql)
+- [sql/tests.sql](/Users/yasserghias/Documents/Playground/sql/tests.sql)
 
-## Local Development
-1. Copy `.env.example` to `.env`.
-2. Install dependencies with `pip install -r requirements.txt`.
-3. Start local services with `docker compose up -d`.
-4. Run the API with `uvicorn dealflow_ai_engine.api.app:app --reload`.
-5. Execute repository validation with `pytest`.
+## Runtime Assumptions
+- AWS for infrastructure
+- Snowflake for warehouse and semantic datasets
+- S3 for raw payload storage
+- Airflow for orchestration
+- OpenAI for strategy generation and enrichment assistance
+- Salesforce-first CRM integration
 
-## Operating Principles
-- SQL owns transformation, ranking inputs, marts, and data quality rules.
-- Python owns source ingestion, orchestration, external adapters, and utility execution wrappers.
-- AI output is structured, versioned, evidence-backed, and tied to source warehouse datasets.
-- CRM writeback is idempotent and independently controllable from ranking and strategy generation.
+## Execution Flow
+```mermaid
+flowchart LR
+    A["External APIs / RSS / Web / CRM"] --> B["Python Ingestion Layer"]
+    B --> C["Snowflake Raw"]
+    C --> D["Staging Models"]
+    D --> E["Transformations + Scoring"]
+    E --> F["Marts + Semantic Metrics"]
+    F --> G["AI Strategy Workflows"]
+    G --> H["CRM Lifecycle Automation"]
+    H --> I["Outcome Tracking"]
+    I --> E
+```

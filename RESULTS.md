@@ -1,16 +1,8 @@
 # Results
 
-## Platform Outcome Metrics
-- Signal-to-ranked-queue publication latency.
-- Ranked item acceptance rate by owner and source.
-- Recommendation-to-task conversion rate.
-- Time from signal detection to first CRM action.
-- Pipeline advancement rate attributed to ranked signals.
-- Recommendation quality by prompt version and score band.
-
-## Data Product Quality Metrics
-- Source freshness SLA attainment.
-- Duplicate signal rate.
-- Entity resolution manual review rate.
-- CRM writeback retry rate.
-- Warehouse model test pass rate.
+## Expected Platform Outcomes
+- reduced manual prospecting time
+- improved investor targeting precision
+- faster deal discovery from external signals
+- stronger pipeline visibility
+- improved outreach conversion through better timing and context

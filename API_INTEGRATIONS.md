@@ -1,23 +1,31 @@
 # API Integrations
 
-## Design Principles
-- Keep provider-specific behavior inside adapters.
-- Persist raw provider responses before warehouse transformation.
-- Treat outbound CRM calls as operational side effects with explicit retry and replay handling.
+## Source Systems
+- Company/funding feed API
+- News API
+- Hiring trend API
+- Investor directory export
+- Public filing and transcript source
+- Salesforce extracts
+- Email engagement logs
+- Web scraping for company sites
 
-## Source Interfaces
-- News and press release APIs.
-- Hiring feeds and company-change providers.
-- Filing and transcript sources.
-- CRM extracts for accounts, contacts, opportunities, activities, and tasks.
+## Example External Contract
+```json
+{
+  "source_record_id": "sig_001",
+  "event_type": "funding_announcement",
+  "company_name": "North Ridge Systems",
+  "headline": "North Ridge Systems raises Series B",
+  "event_timestamp": "2026-03-16T10:30:00Z",
+  "url": "https://example.com/funding",
+  "investors": ["Summit Peak Ventures"]
+}
+```
 
-## Internal Endpoints
-- `GET /health`
-- `GET /signals/mock`
-- `POST /workflow/process`
-
-## Adapter Controls
-- Timeouts and backoff for every external request.
-- Source-level correlation ids in logs.
-- Stable request and response schemas for warehouse loading.
-- Idempotent CRM writeback using deterministic task keys.
+## Internal API Shapes
+- health endpoint
+- signal ingest trigger
+- strategy generation trigger
+- CRM dispatch trigger
+- backfill trigger

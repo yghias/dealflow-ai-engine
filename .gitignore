@@ -1,11 +1,8 @@
-.pycache/
+.env
+.venv/
 __pycache__/
 .pytest_cache/
-.venv/
-.env
 *.pyc
-dist/
-build/
 .DS_Store
 capital-raising-data-platform/
 car-rental-analytics-platform/

@@ -1,0 +1,18 @@
+[
+  {
+    "investor_id": "inv_001",
+    "investor_name": "Summit Peak Ventures",
+    "investor_type": "venture_capital",
+    "focus_sectors": "Enterprise Software, Data Infrastructure",
+    "geography_focus": "North America",
+    "average_check_size": 18000000
+  },
+  {
+    "investor_id": "inv_002",
+    "investor_name": "Cedar Capital",
+    "investor_type": "growth_equity",
+    "focus_sectors": "Fintech, SaaS",
+    "geography_focus": "United States",
+    "average_check_size": 25000000
+  }
+]

@@ -6,7 +6,7 @@ variable "environment" {
   type = string
 }
 
-resource "null_resource" "platform" {
+resource "null_resource" "dealflow_ai_engine" {
   triggers = {
     environment = var.environment
   }

@@ -1,10 +1,13 @@
 # Use Cases
 
-## Origination Queue Management
-Surface companies entering meaningful change windows and route ranked opportunities to the correct coverage owner.
+## Deal Sourcing
+Detect new funding, leadership changes, acquisitions, and product or hiring signals to prioritize outbound sourcing.
 
-## CRM Next-Best-Action
-Generate evidence-backed follow-up recommendations when new signals materially change account context.
+## Investor Targeting
+Rank investors by historical fit, relationship strength, sector relevance, and recent activity.
 
-## Source Quality Management
-Measure which external feeds lead to accepted recommendations, downstream meetings, and pipeline advancement.
+## Capital Raising Intelligence
+Track fundraising signals, investor syndicates, and competitive participation across target companies.
+
+## CRM Automation
+Create tasks, notes, and outreach triggers from prioritized signals and AI-generated recommendations.

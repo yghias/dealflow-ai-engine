@@ -4,17 +4,10 @@ profile: dealflow_ai_engine
 config-version: 2
 
 model-paths: ["models"]
-seed-paths: ["sample_data"]
-test-paths: ["models/tests"]
 
 models:
   dealflow_ai_engine:
     staging:
-      +schema: staging
       +materialized: view
-    intermediate:
-      +schema: intermediate
-      +materialized: table
     marts:
-      +schema: mart
       +materialized: table

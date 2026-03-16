@@ -1,7 +1,9 @@
-variable "snowflake_account" {
+variable "aws_region" {
   type = string
+  default = "us-east-1"
 }
 
-variable "airflow_environment_name" {
+variable "snowflake_database" {
   type = string
+  default = "DEALFLOW"
 }

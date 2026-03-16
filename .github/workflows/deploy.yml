@@ -4,12 +4,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-dev:
+  deploy:
     runs-on: ubuntu-latest
-    environment: development
     steps:
       - uses: actions/checkout@v4
-      - name: Build image
-        run: docker build -t dealflow-ai-engine:${{ github.sha }} .
-      - name: Deployment note
-        run: echo "Publish image and update Airflow/API deployment manifests in target environment."
+      - run: docker build -t dealflow-ai-engine:${{ github.sha }} .
+      - run: echo "Deploy application container and Airflow DAG package to target environment."
